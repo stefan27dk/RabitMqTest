@@ -8,10 +8,10 @@ class Receive
     public static void Main()
     {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.UserName = "user";
-        factory.Password = "password";
+        factory.UserName = "user123";
+        factory.Password = "user123";
         factory.VirtualHost = "/";
-        factory.HostName = "localhost";
+        factory.HostName = "192.168.99.100";
         factory.Port = AmqpTcpEndpoint.UseDefaultPort;
         IConnection connection = factory.CreateConnection();
 
