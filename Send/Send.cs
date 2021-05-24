@@ -6,23 +6,38 @@ class Send
 {
     public static void Main()
     {
+        // Connection Factory---------------------------------------------------------------------------
+        ConnectionFactory factory = new ConnectionFactory()
+        {
+            UserName = "user123",
+            Password = "user123",
+            VirtualHost = "/",
+            HostName = "192.168.99.100",
+            Port = AmqpTcpEndpoint.UseDefaultPort
+        };
 
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.UserName = "user123";
-        factory.Password = "user123";
-        factory.VirtualHost = "/";
-        factory.HostName = "192.168.99.100";
-        factory.Port = AmqpTcpEndpoint.UseDefaultPort;
-        IConnection connection = factory.CreateConnection();
 
-        //using (var connection = factory.CreateConnection())
+
+        // Connection / Chanel ---------------------------------------------------------------------------
+        using (var connection = factory.CreateConnection())
         using (var channel = connection.CreateModel())
         {
-            channel.QueueDeclare(queue: "hello", durable: false, exclusive: false, autoDelete: false, arguments: null);
 
+            // QUEUE................................................
+            channel.QueueDeclare(
+                queue: "hello", 
+                durable: false, 
+                exclusive: false, 
+                autoDelete: false, 
+                arguments: null);
+
+            
+            // Message ................................................
             string message = "Hello World!";
             var body = Encoding.UTF8.GetBytes(message);
 
+
+            // Send Message ...........................................
             channel.BasicPublish(exchange: "", routingKey: "hello", basicProperties: null, body: body);
             Console.WriteLine(" [x] Sent {0}", message);
         }
